@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Inscription des stagiaires</title>
+  <style>
+    body{font-family:system-ui,sans-serif;background:#f4f6fb;margin:0;padding:24px}
+    .card{max-width:420px;margin:auto;background:#fff;padding:24px;border-radius:12px;box-shadow:0 2px 10px #0001}
+    label{display:block;margin-top:14px;font-weight:600}
+    input{width:100%;padding:9px;margin-top:6px;box-sizing:border-box;border:1px solid #ccc;border-radius:6px}
+    button{margin-top:20px;width:100%;padding:11px;background:#3b5bdb;color:#fff;border:0;border-radius:6px;font-size:16px;cursor:pointer}
+    button:disabled{opacity:.6}
+    #msg{margin-top:14px;font-weight:600}
+    .ok{color:#2b8a3e}.ko{color:#c92a2a}
+    a{display:block;text-align:center;margin-top:16px}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Inscription d’un stagiaire</h2>
+    <form id="form">
+      <label>Nom <input name="nom" required maxlength="100"></label>
+      <label>Prénom <input name="prenom" required maxlength="100"></label>
+      <label>Ville <input name="ville" required maxlength="100"></label>
+      <label>Photo <input type="file" name="photo" accept="image/*" required></label>
+      <button type="submit" id="btn">Inscrire</button>
+    </form>
+    <div id="msg"></div>
+    <a href="liste.html">Voir la liste des stagiaires</a>
+  </div>
+
+  <script>
+    const form = document.getElementById('form');
+    const msg = document.getElementById('msg');
+    const btn = document.getElementById('btn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      btn.disabled = true;
+      msg.textContent = 'Envoi en cours…';
+      msg.className = '';
+      try {
+        const res = await fetch('/api/inscrire.php', { method: 'POST', body: new FormData(form) });
+        const data = await res.json();
+        msg.textContent = data.message;
+        msg.className = data.success ? 'ok' : 'ko';
+        if (data.success) form.reset();
+      } catch (err) {
+        msg.textContent = 'Erreur réseau.';
+        msg.className = 'ko';
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
