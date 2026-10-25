@@ -64,5 +64,5 @@ try {
     reponse(201, ['success' => true, 'message' => 'Stagiaire inscrit avec succès.', 'photo' => $photoUrl]);
 } catch (Throwable $e) {
     error_log($e->getMessage());
-       reponse(500, ['success' => false, 'message' => 'Erreur : ' . $e->getMessage()]);
+    reponse(500, ['success' => false, 'message' => 'Erreur serveur.']);
 }
