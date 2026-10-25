@@ -64,5 +64,9 @@ try {
     reponse(201, ['success' => true, 'message' => 'Stagiaire inscrit avec succès.', 'photo' => $photoUrl]);
 } catch (Throwable $e) {
     error_log($e->getMessage());
-    reponse(500, ['success' => false, 'message' => 'Erreur serveur.']);
+        $u = parse_url((string) getenv('CLOUDINARY_URL'));
+    reponse(500, ['success' => false, 'message' => 'Erreur : ' . $e->getMessage()
+        . ' | cloud=' . ($u['host'] ?? 'vide')
+        . ' | key=' . ($u['user'] ?? 'vide')
+        . ' | secret_len=' . strlen($u['pass'] ?? '')]);
 }
